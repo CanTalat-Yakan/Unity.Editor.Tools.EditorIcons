@@ -8,7 +8,7 @@ namespace UnityEssentials
         public static string GetIconReferenceByName(IconNames icon)
         {
 #if UNITY_EDITOR
-            string iconString = Icons[(int)icon];
+            string iconString = IconReferences[(int)icon];
 
             if (!string.IsNullOrEmpty(iconString))
                 return iconString;
@@ -19,7 +19,7 @@ namespace UnityEssentials
         public static Texture2D GetIconTexture(IconNames icon)
         {
 #if UNITY_EDITOR
-            string iconString = Icons[(int)icon];
+            string iconString = IconReferences[(int)icon];
 
             if (!string.IsNullOrEmpty(iconString))
                 return EditorGUIUtility.IconContent(iconString).image as Texture2D;
@@ -27,7 +27,7 @@ namespace UnityEssentials
             return null;
         }
 
-        public static string[] Icons =
+        public static string[] IconReferences =
             {
             "_Help","_Popup","aboutwindow.mainheader","ageialogo","AlphabeticalSorting","Animation.AddEvent",
             "Animation.AddKeyframe","Animation.EventMarker","Animation.FirstKey","Animation.LastKey",
