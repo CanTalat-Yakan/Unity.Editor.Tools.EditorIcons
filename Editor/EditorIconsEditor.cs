@@ -15,7 +15,7 @@ namespace UnityEssentials
         public static void ShowWindow()
         {
             var editor = new EditorIcons();
-            editor.Window = new EditorWindowDrawer("Editor Icons", new(700, 600), new(320, 450))
+            editor.Window = new EditorWindowDrawer("Editor Icons", new(320, 450), new(700, 600))
                 .SetInitialization(editor.Initialization)
                 .SetHeader(editor.Header, EditorWindowDrawer.GUISkin.Toolbar)
                 .SetBody(editor.Body)
@@ -30,21 +30,18 @@ namespace UnityEssentials
 
         private void Header()
         {
-            using (new GUILayout.HorizontalScope())
-            {
-                if (GUILayout.Button("Save all icons to folder...", EditorStyles.miniButton))
-                    SaveAllIcons();
+            if (GUILayout.Button("Save all icons to folder...", EditorStyles.toolbarButton))
+                SaveAllIcons();
 
-                _viewBigIcons = GUILayout.SelectionGrid(
-                    _viewBigIcons ? 1 : 0,
-                    new string[] { "Small", "Big" },
-                    2,
-                    EditorStyles.toolbarButton
-                ) == 1;
+            _viewBigIcons = GUILayout.SelectionGrid(
+                _viewBigIcons ? 1 : 0,
+                new string[] { "Small", "Big" },
+                2,
+                EditorStyles.toolbarButton
+            ) == 1;
 
-                GUILayout.Space(10);
-                _search = EditorGUILayout.TextField(_search, EditorStyles.toolbarSearchField);
-            }
+            GUILayout.Space(10);
+            _search = EditorGUILayout.TextField(_search, EditorStyles.toolbarSearchField);
         }
 
         private void Body()
