@@ -12,16 +12,13 @@ namespace UnityEssentials
     {
         private string _iconNameFilter = string.Empty;
 
-        private static bool s_viewBigIcons = false;
-        private static bool s_lightPreview = false;
+        private static bool s_viewBigIcons = true;
 
         private static GUIContent s_iconSelected;
         private static List<GUIContent> s_iconContentListAll;
         private static List<GUIContent> s_iconContentListSmall;
         private static List<GUIContent> s_iconContentListBig;
         private static GUIStyle s_iconButtonStyle;
-        private static GUIStyle s_iconPreviewBlack;
-        private static GUIStyle s_iconPreviewWhite;
 
         private List<GUIContent> GetFilteredIconList()
         {
@@ -46,9 +43,6 @@ namespace UnityEssentials
                 fixedHeight = 0
             };
 
-            s_iconPreviewBlack = CreatePreviewStyle(new Color(0, 0, 0, 0));
-            s_iconPreviewWhite = CreatePreviewStyle(new Color(0.85f, 0.85f, 0.85f));
-
             s_iconContentListSmall = new List<GUIContent>();
             s_iconContentListBig = new List<GUIContent>();
             s_iconContentListAll = new List<GUIContent>();
@@ -64,26 +58,10 @@ namespace UnityEssentials
 
                 if (icon.image.width > 36 && icon.image.height > 36)
                     s_iconContentListBig.Add(icon);
-                else
-                    s_iconContentListSmall.Add(icon);
+                else s_iconContentListSmall.Add(icon);
             }
 
             s_iconSelected = null;
-        }
-
-        private GUIStyle CreatePreviewStyle(Color bgColor)
-        {
-            var style = new GUIStyle(s_iconButtonStyle);
-            var tex = new Texture2D(1, 1);
-            tex.SetPixel(0, 0, bgColor);
-            tex.Apply();
-
-            style.normal =
-            style.hover =
-            style.active =
-            style.focused = new GUIStyleState { background = tex };
-
-            return style;
         }
 
         private GUIContent GetIcon(string iconName)

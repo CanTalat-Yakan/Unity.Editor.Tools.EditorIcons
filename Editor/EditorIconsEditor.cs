@@ -40,7 +40,7 @@ namespace UnityEssentials
                 EditorStyles.toolbarButton
             ) == 1;
 
-            GUILayout.Space(10);
+            GUILayout.Space(4);
             _iconNameFilter = EditorGUILayout.TextField(_iconNameFilter, EditorStyles.toolbarSearchField);
         }
 
@@ -96,15 +96,33 @@ namespace UnityEssentials
             GUILayout.Space(-1);
             using (new GUILayout.HorizontalScope(EditorStyles.helpBox))
             {
-                using (new GUILayout.VerticalScope(GUILayout.Width(130)))
+                var iconTexture = s_iconSelected.image as Texture2D;
+                var iconRect = GUILayoutUtility.GetRect(100, 100, GUILayout.Width(100), GUILayout.Height(100));
+
+                if (iconTexture != null)
                 {
-                    GUILayout.Space(4);
-                    var preview = s_lightPreview ? s_iconPreviewWhite : s_iconPreviewBlack;
-                    GUILayout.Button(s_iconSelected, preview, GUILayout.Width(128), GUILayout.Height(68));
-                    GUILayout.Space(5);
-                    var selected = s_lightPreview ? 0 : 1;
-                    s_lightPreview = GUILayout.SelectionGrid(selected, new string[] { "Light", "Dark" }, 2, EditorStyles.miniButton) == 0;
+                    int maxBox = 100;
+                    int smallBox = 75;
+
+                    int targetBox = (iconTexture.width <= smallBox && iconTexture.height <= smallBox) ? smallBox : maxBox;
+
+                    // Calculate scale to fit (never exceed targetBox)
+                    float scale = Mathf.Min((float)targetBox / iconTexture.width, (float)targetBox / iconTexture.height);
+
+                    float drawWidth = iconTexture.width * scale;
+                    float drawHeight = iconTexture.height * scale;
+
+                    // Center the icon in the 100x100 rect
+                    var drawRect = new Rect(
+                        iconRect.x + (iconRect.width - drawWidth) / 2f,
+                        iconRect.y + (iconRect.height - drawHeight) / 2f,
+                        drawWidth,
+                        drawHeight);
+
+                    // Draw as a button
+                    GUI.DrawTexture(drawRect, iconTexture, ScaleMode.ScaleToFit, true);
                 }
+
                 GUILayout.Space(10);
                 using (new GUILayout.VerticalScope())
                 {
@@ -112,11 +130,11 @@ namespace UnityEssentials
                     size += "\nIs Pro Skin Icon: " + (s_iconSelected.tooltip.IndexOf("d_") == 0 ? "Yes" : "No");
                     size += $"\nTotal {s_iconContentListAll.Count} icons";
 
-                    GUILayout.Space(5);
-                    EditorGUILayout.HelpBox(size, MessageType.None);
-                    GUILayout.Space(5);
+                    GUILayout.Space(12);
+                    GUILayout.Label(size, EditorStyles.miniLabel);
+                    GUILayout.Space(4);
                     EditorGUILayout.TextField("EditorGUIUtility.IconContent(\"" + s_iconSelected.tooltip + "\")");
-                    GUILayout.Space(5);
+                    GUILayout.Space(4);
 
                     using (new GUILayout.HorizontalScope())
                     {
