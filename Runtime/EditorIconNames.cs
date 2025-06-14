@@ -48,7 +48,7 @@ namespace UnityEssentials
         }
 
         public static string[] References =
-            {
+        {
             "_Help","_Popup","aboutwindow.mainheader","ageialogo","AlphabeticalSorting","Animation.AddEvent",
             "Animation.AddKeyframe","Animation.EventMarker","Animation.FirstKey","Animation.LastKey",
             "Animation.NextKey","Animation.Play","Animation.PrevKey","Animation.Record","Animation.SequencerLink",

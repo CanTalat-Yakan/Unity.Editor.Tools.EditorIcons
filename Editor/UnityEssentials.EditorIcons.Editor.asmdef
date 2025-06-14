@@ -2,6 +2,7 @@
     "name": "UnityEssentials.EditorIcons.Editor",
     "rootNamespace": "UnityEssentials",
     "references": [
+        "GUID:71b3a2b9f99395340b8b9366efa20e3d",
         "GUID:f054f0258fed7844e9dada987e3e00a4"
     ],
     "includePlatforms": [],
