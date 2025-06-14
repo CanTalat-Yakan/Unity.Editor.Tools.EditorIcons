@@ -67,6 +67,8 @@ namespace UnityEssentials
                 else
                     s_iconContentListSmall.Add(icon);
             }
+
+            s_iconSelected = null;
         }
 
         private GUIStyle CreatePreviewStyle(Color bgColor)
