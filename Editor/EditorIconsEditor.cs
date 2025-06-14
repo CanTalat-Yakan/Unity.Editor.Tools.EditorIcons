@@ -18,7 +18,7 @@ namespace UnityEssentials
             editor.Window = new EditorWindowDrawer("Editor Icons", new(320, 450), new(700, 600))
                 .SetInitialization(editor.Initialization)
                 .SetHeader(editor.Header, EditorWindowDrawer.GUISkin.Toolbar)
-                .SetBody(editor.Body)
+                .SetBody(editor.Body, EditorWindowDrawer.GUISkin.Margin)
                 .SetFooter(editor.Footer)
                 .GetRepaintEvent(out editor.Repaint)
                 .GetCloseEvent(out editor.Close)
@@ -33,15 +33,15 @@ namespace UnityEssentials
             if (GUILayout.Button("Save all icons to folder...", EditorStyles.toolbarButton))
                 SaveAllIcons();
 
-            _viewBigIcons = GUILayout.SelectionGrid(
-                _viewBigIcons ? 1 : 0,
+            s_viewBigIcons = GUILayout.SelectionGrid(
+                s_viewBigIcons ? 1 : 0,
                 new string[] { "Small", "Big" },
                 2,
                 EditorStyles.toolbarButton
             ) == 1;
 
             GUILayout.Space(10);
-            _search = EditorGUILayout.TextField(_search, EditorStyles.toolbarSearchField);
+            _iconNameFilter = EditorGUILayout.TextField(_iconNameFilter, EditorStyles.toolbarSearchField);
         }
 
         private void Body()
@@ -50,9 +50,15 @@ namespace UnityEssentials
 
             var iconList = GetFilteredIconList();
 
-            float renderWidth = Screen.width / EditorGUIUtility.pixelsPerPoint - 13f;
-            int gridWidth = Mathf.FloorToInt(renderWidth / _buttonSize);
-            float marginLeft = (renderWidth - _buttonSize * gridWidth) / 2;
+            float renderWidth = Screen.width / EditorGUIUtility.pixelsPerPoint - 24;
+
+            int maxIconsPerRow = Mathf.FloorToInt(renderWidth / 40);
+            maxIconsPerRow = Mathf.Max(1, maxIconsPerRow);
+
+            float iconSize = Mathf.Max(40, renderWidth / maxIconsPerRow);
+
+            int gridWidth = maxIconsPerRow;
+            float marginLeft = (renderWidth - iconSize * gridWidth) / 2;
 
             int row = 0;
             int index = 0;
@@ -69,10 +75,10 @@ namespace UnityEssentials
                         if (k >= iconList.Count) break;
 
                         var icon = iconList[k];
-                        if (GUILayout.Button(icon, _iconButtonStyle, GUILayout.Width(_buttonSize), GUILayout.Height(_buttonSize)))
+                        if (GUILayout.Button(icon, s_iconButtonStyle, GUILayout.Width(iconSize), GUILayout.Height(iconSize)))
                         {
                             EditorGUI.FocusTextInControl("");
-                            _iconSelected = icon;
+                            s_iconSelected = icon;
                         }
                         index++;
                     }
@@ -84,9 +90,10 @@ namespace UnityEssentials
 
         private void Footer()
         {
-            if (_iconSelected == null)
+            if (s_iconSelected == null)
                 return;
 
+            GUILayout.Space(-1);
             using (new GUILayout.HorizontalScope(EditorStyles.helpBox))
             {
                 DrawPreviewSection();
@@ -97,7 +104,7 @@ namespace UnityEssentials
                     GUILayout.ExpandHeight(false),
                     GUILayout.ExpandWidth(false)))
                 {
-                    _iconSelected = null;
+                    s_iconSelected = null;
                 }
             }
         }
@@ -107,12 +114,11 @@ namespace UnityEssentials
             using (new GUILayout.VerticalScope(GUILayout.Width(130)))
             {
                 GUILayout.Space(4);
-                var preview = _darkPreview ? _iconPreviewBlack : _iconPreviewWhite;
-                GUILayout.Button(_iconSelected, preview, GUILayout.Width(128), GUILayout.Height(68));
+                var preview = s_lightPreview ? s_iconPreviewWhite : s_iconPreviewBlack;
+                GUILayout.Button(s_iconSelected, preview, GUILayout.Width(128), GUILayout.Height(68));
                 GUILayout.Space(5);
-                var selected = _darkPreview ? 1 : 0;
-                _darkPreview = GUILayout.SelectionGrid(selected, new string[] { "Light", "Dark" }, 2, EditorStyles.miniButton) == 1;
-                GUILayout.FlexibleSpace();
+                var selected = s_lightPreview ? 0 : 1;
+                s_lightPreview = GUILayout.SelectionGrid(selected, new string[] { "Light", "Dark" }, 2, EditorStyles.miniButton) == 0;
             }
             GUILayout.Space(10);
         }
@@ -121,22 +127,22 @@ namespace UnityEssentials
         {
             using (new GUILayout.VerticalScope())
             {
-                string size = $"Size: {_iconSelected.image.width}x{_iconSelected.image.height}";
-                size += "\nIs Pro Skin Icon: " + (_iconSelected.tooltip.IndexOf("d_") == 0 ? "Yes" : "No");
-                size += $"\nTotal {_iconContentListAll.Count} icons";
+                string size = $"Size: {s_iconSelected.image.width}x{s_iconSelected.image.height}";
+                size += "\nIs Pro Skin Icon: " + (s_iconSelected.tooltip.IndexOf("d_") == 0 ? "Yes" : "No");
+                size += $"\nTotal {s_iconContentListAll.Count} icons";
 
                 GUILayout.Space(5);
                 EditorGUILayout.HelpBox(size, MessageType.None);
                 GUILayout.Space(5);
-                EditorGUILayout.TextField("EditorGUIUtility.IconContent(\"" + _iconSelected.tooltip + "\")");
+                EditorGUILayout.TextField("EditorGUIUtility.IconContent(\"" + s_iconSelected.tooltip + "\")");
                 GUILayout.Space(5);
 
                 using (new GUILayout.HorizontalScope())
                 {
                     if (GUILayout.Button("Copy to clipboard", EditorStyles.miniButton))
-                        EditorGUIUtility.systemCopyBuffer = _iconSelected.tooltip;
+                        EditorGUIUtility.systemCopyBuffer = s_iconSelected.tooltip;
                     if (GUILayout.Button("Save icon to file ...", EditorStyles.miniButton))
-                        SaveIcon(_iconSelected.tooltip);
+                        SaveIcon(s_iconSelected.tooltip);
                 }
             }
             GUILayout.Space(10);

@@ -10,68 +10,68 @@ namespace UnityEssentials
 {
     public partial class EditorIcons
     {
-        private static bool _viewBigIcons = false;
-        private static bool _darkPreview = true;
-        private int _buttonSize = 40;
-        private string _search = "";
+        private string _iconNameFilter = string.Empty;
 
-        private static GUIContent _iconSelected;
-        private static List<GUIContent> _iconContentListAll;
-        private static List<GUIContent> _iconContentListSmall;
-        private static List<GUIContent> _iconContentListBig;
-        private static GUIStyle _iconButtonStyle;
-        private static GUIStyle _iconPreviewBlack;
-        private static GUIStyle _iconPreviewWhite;
+        private static bool s_viewBigIcons = false;
+        private static bool s_lightPreview = false;
+
+        private static GUIContent s_iconSelected;
+        private static List<GUIContent> s_iconContentListAll;
+        private static List<GUIContent> s_iconContentListSmall;
+        private static List<GUIContent> s_iconContentListBig;
+        private static GUIStyle s_iconButtonStyle;
+        private static GUIStyle s_iconPreviewBlack;
+        private static GUIStyle s_iconPreviewWhite;
 
         private List<GUIContent> GetFilteredIconList()
         {
-            if (string.IsNullOrWhiteSpace(_search))
-                return _viewBigIcons ? _iconContentListBig : _iconContentListSmall;
+            if (string.IsNullOrWhiteSpace(_iconNameFilter))
+                return s_viewBigIcons ? s_iconContentListBig : s_iconContentListSmall;
 
-            return _iconContentListAll
+            return s_iconContentListAll
                 .Where(icon => icon.tooltip
                     .ToLower()
-                    .Contains(_search.ToLower()))
+                    .Contains(_iconNameFilter.ToLower()))
                 .ToList();
         }
 
         private void InitializeIcons()
         {
-            if (_iconContentListSmall != null)
+            if (s_iconContentListSmall != null)
                 return;
 
-            _iconButtonStyle = new GUIStyle(EditorStyles.miniButton)
+            s_iconButtonStyle = new GUIStyle(EditorStyles.miniButton)
             {
                 margin = new RectOffset(0, 0, 0, 0),
                 fixedHeight = 0
             };
 
-            _iconPreviewBlack = CreatePreviewStyle(new Color(0.26f, 0.26f, 0.26f));
-            _iconPreviewWhite = CreatePreviewStyle(new Color(0.85f, 0.85f, 0.85f));
+            s_iconPreviewBlack = CreatePreviewStyle(new Color(0, 0, 0, 0));
+            s_iconPreviewWhite = CreatePreviewStyle(new Color(0.85f, 0.85f, 0.85f));
 
-            _iconContentListSmall = new List<GUIContent>();
-            _iconContentListBig = new List<GUIContent>();
-            _iconContentListAll = new List<GUIContent>();
+            s_iconContentListSmall = new List<GUIContent>();
+            s_iconContentListBig = new List<GUIContent>();
+            s_iconContentListAll = new List<GUIContent>();
 
             foreach (string iconName in Icon.References)
             {
                 var icon = GetIcon(iconName);
-                if (icon == null) 
+                if (icon == null)
                     continue;
 
                 icon.tooltip = iconName;
-                _iconContentListAll.Add(icon);
+                s_iconContentListAll.Add(icon);
 
                 if (icon.image.width > 36 && icon.image.height > 36)
-                    _iconContentListBig.Add(icon);
+                    s_iconContentListBig.Add(icon);
                 else
-                    _iconContentListSmall.Add(icon);
+                    s_iconContentListSmall.Add(icon);
             }
         }
 
         private GUIStyle CreatePreviewStyle(Color bgColor)
         {
-            var style = new GUIStyle(_iconButtonStyle);
+            var style = new GUIStyle(s_iconButtonStyle);
             var tex = new Texture2D(1, 1);
             tex.SetPixel(0, 0, bgColor);
             tex.Apply();
@@ -94,7 +94,7 @@ namespace UnityEssentials
 
         private void SaveIcon(string iconName)
         {
-            Texture2D texture = EditorGUIUtility.IconContent(iconName).image as Texture2D;
+            var texture = EditorGUIUtility.IconContent(iconName).image as Texture2D;
             if (texture == null)
             {
                 Debug.LogError("Cannot save icon: null texture!");
@@ -106,27 +106,24 @@ namespace UnityEssentials
 
             try
             {
-                RenderTexture rt = RenderTexture.GetTemporary(
+                var renderTexture = RenderTexture.GetTemporary(
                     texture.width, texture.height,
                     0, RenderTextureFormat.ARGB32, RenderTextureReadWrite.sRGB);
 
-                Graphics.Blit(texture, rt);
-                RenderTexture.active = rt;
+                Graphics.Blit(texture, renderTexture);
+                RenderTexture.active = renderTexture;
 
-                Texture2D outTexture = new Texture2D(texture.width, texture.height, TextureFormat.ARGB32, false);
+                var outTexture = new Texture2D(texture.width, texture.height, TextureFormat.ARGB32, false);
                 outTexture.ReadPixels(new Rect(0, 0, texture.width, texture.height), 0, 0);
                 outTexture.Apply();
 
                 File.WriteAllBytes(path, outTexture.EncodeToPNG());
 
-                RenderTexture.ReleaseTemporary(rt);
+                RenderTexture.ReleaseTemporary(renderTexture);
                 RenderTexture.active = null;
                 Editor.DestroyImmediate(outTexture);
             }
-            catch (Exception e)
-            {
-                Debug.LogError("Cannot save icon: " + e.Message);
-            }
+            catch (Exception ex) { Debug.LogError("Cannot save icon: " + ex.Message); }
         }
 
         private void SaveAllIcons()
@@ -141,34 +138,33 @@ namespace UnityEssentials
                     string fileName = iconName.Split('/').Last() + ".png";
                     string fullPath = Path.Combine(folderPath, fileName);
 
-                    if (File.Exists(fullPath)) continue;
+                    if (File.Exists(fullPath))
+                        continue;
 
-                    Texture2D texture = EditorGUIUtility.IconContent(iconName).image as Texture2D;
-                    if (texture == null) continue;
+                    var texture = EditorGUIUtility.IconContent(iconName).image as Texture2D;
+                    if (texture == null)
+                        continue;
 
                     // Same saving logic as in SaveIcon but without dialog
-                    RenderTexture rt = RenderTexture.GetTemporary(
+                    var renderTexture = RenderTexture.GetTemporary(
                         texture.width, texture.height,
                         0, RenderTextureFormat.ARGB32, RenderTextureReadWrite.sRGB);
 
-                    Graphics.Blit(texture, rt);
-                    RenderTexture.active = rt;
+                    Graphics.Blit(texture, renderTexture);
+                    RenderTexture.active = renderTexture;
 
-                    Texture2D outTexture = new Texture2D(texture.width, texture.height, TextureFormat.ARGB32, false);
+                    var outTexture = new Texture2D(texture.width, texture.height, TextureFormat.ARGB32, false);
                     outTexture.ReadPixels(new Rect(0, 0, texture.width, texture.height), 0, 0);
                     outTexture.Apply();
 
                     File.WriteAllBytes(fullPath, outTexture.EncodeToPNG());
 
-                    RenderTexture.ReleaseTemporary(rt);
+                    RenderTexture.ReleaseTemporary(renderTexture);
                     RenderTexture.active = null;
                     Editor.DestroyImmediate(outTexture);
                 }
             }
-            catch (Exception e)
-            {
-                Debug.LogError("Cannot save icons: " + e.Message);
-            }
+            catch (Exception ex) { Debug.LogError("Cannot save icons: " + ex.Message); }
         }
     }
 }
