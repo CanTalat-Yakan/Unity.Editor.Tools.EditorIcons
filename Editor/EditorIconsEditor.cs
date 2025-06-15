@@ -126,12 +126,12 @@ namespace UnityEssentials
                 GUILayout.Space(10);
                 using (new GUILayout.VerticalScope())
                 {
-                    string size = $"Size: {s_iconSelected.image.width}x{s_iconSelected.image.height}";
-                    size += "\nIs Pro Skin Icon: " + (s_iconSelected.tooltip.IndexOf("d_") == 0 ? "Yes" : "No");
-                    size += $"\nTotal {s_iconContentListAll.Count} icons";
+                    string iconInfo = $"Size: {s_iconSelected.image.width}x{s_iconSelected.image.height}";
+                    iconInfo += "\nIs Pro Skin Icon: " + (s_iconSelected.tooltip.IndexOf("d_") == 0 ? "Yes" : "No");
+                    iconInfo += $"\nTotal {s_iconContentListAll.Count} icons";
 
                     GUILayout.Space(12);
-                    GUILayout.Label(size, EditorStyles.miniLabel);
+                    GUILayout.Label(iconInfo, EditorStyles.miniLabel);
                     GUILayout.Space(4);
                     EditorGUILayout.TextField("EditorGUIUtility.IconContent(\"" + s_iconSelected.tooltip + "\")");
                     GUILayout.Space(4);
