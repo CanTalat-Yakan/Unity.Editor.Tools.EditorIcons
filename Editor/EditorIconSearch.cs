@@ -8,7 +8,7 @@ using UnityEngine;
 
 namespace UnityEssentials
 {
-    public partial class EditorIcons
+    public partial class EditorIconSearch
     {
         private string _iconNameFilter = string.Empty;
 
@@ -47,7 +47,7 @@ namespace UnityEssentials
             s_iconContentListBig = new List<GUIContent>();
             s_iconContentListAll = new List<GUIContent>();
 
-            foreach (string iconName in EditorIconsUtilities.References)
+            foreach (string iconName in EditorIconUtilities.References)
             {
                 var icon = GetIcon(iconName);
                 if (icon == null)
@@ -113,7 +113,7 @@ namespace UnityEssentials
 
             try
             {
-                foreach (string iconName in EditorIconsUtilities.References)
+                foreach (string iconName in EditorIconUtilities.References)
                 {
                     string fileName = iconName.Split('/').Last() + ".png";
                     string fullPath = Path.Combine(folderPath, fileName);

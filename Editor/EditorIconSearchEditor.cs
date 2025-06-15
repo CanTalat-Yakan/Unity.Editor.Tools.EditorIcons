@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace UnityEssentials
 {
-    public partial class EditorIcons
+    public partial class EditorIconSearch
     {
         public EditorWindowDrawer Window;
         public Action Repaint;
@@ -14,7 +14,7 @@ namespace UnityEssentials
         [MenuItem("Tools/Editor Icons %e", priority = 1001)]
         public static void ShowWindow()
         {
-            var editor = new EditorIcons();
+            var editor = new EditorIconSearch();
             editor.Window = new EditorWindowDrawer("Editor Icons", new(320, 450), new(700, 600))
                 .SetInitialization(editor.Initialization)
                 .SetHeader(editor.Header, EditorWindowStyle.Toolbar)
