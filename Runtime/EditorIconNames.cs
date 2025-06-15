@@ -9,16 +9,9 @@ namespace UnityEssentials
     /// <remarks>This class is designed to work in the Unity Editor environment and provides functionality to
     /// retrieve icon references and textures for use in custom editor tools or UI elements. The methods in this class
     /// rely on a predefined list of icon references.</remarks>
-    public static class Icon
+    public static class EditorIcons
     {
-        /// <summary>
-        /// Retrieves the string reference for the specified icon name.
-        /// </summary>
-        /// <remarks>This method returns a string reference to the icon only when executed in the Unity
-        /// Editor. Outside of the Unity Editor, the method always returns <see langword="null"/>.</remarks>
-        /// <param name="icon">The name of the icon for which to retrieve the reference.</param>
-        /// <returns>A string representing the reference to the specified icon if available; otherwise, <see langword="null"/>.</returns>
-        public static string GetIconReferenceByName(IconNames icon)
+        public static string GetIconReferenceByName(EditorIconNames icon)
         {
 #if UNITY_EDITOR
             string iconString = References[(int)icon];
@@ -29,14 +22,7 @@ namespace UnityEssentials
             return null;
         }
 
-        /// <summary>
-        /// Retrieves the texture associated with the specified icon name.
-        /// </summary>
-        /// <remarks>This method is only functional in the Unity Editor. When called outside of the Unity
-        /// Editor, it always returns <see langword="null"/>.</remarks>
-        /// <param name="icon">The name of the icon for which to retrieve the texture.</param>
-        /// <returns>A <see cref="Texture2D"/> representing the icon's texture if available; otherwise, <see langword="null"/>.</returns>
-        public static Texture2D GetIconTexture(IconNames icon)
+        public static Texture2D GetIconTexture(EditorIconNames icon)
         {
 #if UNITY_EDITOR
             string iconString = References[(int)icon];
@@ -400,10 +386,10 @@ namespace UnityEssentials
     /// <summary>
     /// Represents a collection of predefined icon names used for identifying and referencing icons in the application.
     /// </summary>
-    /// <remarks>The <see cref="IconNames"/> enumeration provides a comprehensive list of icon identifiers
+    /// <remarks>The <see cref="EditorIconNames"/> enumeration provides a comprehensive list of icon identifiers
     /// that can be used for UI elements, tools, and other visual components. Each value corresponds to a specific icon,
     /// which can be used to enhance the user interface or provide visual cues.</remarks>
-    public enum IconNames
+    public enum EditorIconNames
     {
         None = -1, Help, Popup, aboutwindowmainheader, ageialogo, AlphabeticalSorting, AnimationAddEvent,
         AnimationAddKeyframe, AnimationEventMarker, AnimationFirstKey, AnimationLastKey,
