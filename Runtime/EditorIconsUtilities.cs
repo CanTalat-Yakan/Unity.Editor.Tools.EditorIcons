@@ -9,7 +9,7 @@ namespace UnityEssentials
     /// <remarks>This class is designed to work in the Unity Editor environment and provides functionality to
     /// retrieve icon references and textures for use in custom editor tools or UI elements. The methods in this class
     /// rely on a predefined list of icon references.</remarks>
-    public static class EditorIcons
+    public static class EditorIconsUtilities
     {
         public static string GetIconReferenceByName(EditorIconNames icon)
         {
