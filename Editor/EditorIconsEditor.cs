@@ -17,8 +17,8 @@ namespace UnityEssentials
             var editor = new EditorIcons();
             editor.Window = new EditorWindowDrawer("Editor Icons", new(320, 450), new(700, 600))
                 .SetInitialization(editor.Initialization)
-                .SetHeader(editor.Header, EditorWindowDrawer.GUISkin.Toolbar)
-                .SetBody(editor.Body, EditorWindowDrawer.GUISkin.Margin)
+                .SetHeader(editor.Header, EditorWindowStyle.Toolbar)
+                .SetBody(editor.Body, EditorWindowStyle.Margin)
                 .SetFooter(editor.Footer)
                 .GetRepaintEvent(out editor.Repaint)
                 .GetCloseEvent(out editor.Close)
