@@ -11,7 +11,7 @@ namespace UnityEssentials
     /// rely on a predefined list of icon references.</remarks>
     public static class EditorIconUtilities
     {
-        public static string GetIconReferenceByName(EditorIconNames icon)
+        public static string GetReferenceByName(EditorIconNames icon)
         {
 #if UNITY_EDITOR
             string iconString = References[(int)icon];
@@ -22,16 +22,24 @@ namespace UnityEssentials
             return null;
         }
 
-        public static Texture2D GetIconTexture(EditorIconNames icon)
+        public static Texture2D GetTexture(EditorIconNames icon)
         {
 #if UNITY_EDITOR
-            string iconString = References[(int)icon];
-
-            if (!string.IsNullOrEmpty(iconString))
-                return EditorGUIUtility.IconContent(iconString).image as Texture2D;
+            return GetContent(icon)?.image as Texture2D;
 #endif
             return null;
         }
+
+#if UNITY_EDITOR
+        public static GUIContent GetContent(EditorIconNames icon)
+        {
+            string iconString = References[(int)icon];
+
+            if (!string.IsNullOrEmpty(iconString))
+                return EditorGUIUtility.IconContent(iconString);
+            return null;
+        }
+#endif
 
         public static string[] References =
         {
