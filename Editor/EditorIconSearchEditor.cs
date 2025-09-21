@@ -15,14 +15,15 @@ namespace UnityEssentials
         public static void ShowWindow()
         {
             var editor = new EditorIconSearch();
-            editor.Window = new EditorWindowDrawer("Editor Icons", new(320, 450), new(700, 600))
+            editor.Window = EditorWindowDrawer
+                .CreateInstance("Editor Icons", new(320, 450), new(700, 600))
                 .SetInitialization(editor.Initialization)
                 .SetHeader(editor.Header, EditorWindowStyle.Toolbar)
                 .SetBody(editor.Body, EditorWindowStyle.Margin)
                 .SetFooter(editor.Footer)
                 .GetRepaintEvent(out editor.Repaint)
                 .GetCloseEvent(out editor.Close)
-                .ShowUtility();
+                .ShowAsUtility();
         }
 
         private void Initialization() =>
