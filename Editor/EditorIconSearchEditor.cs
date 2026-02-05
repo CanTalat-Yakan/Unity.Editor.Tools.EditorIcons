@@ -7,7 +7,7 @@ namespace UnityEssentials
 {
     public partial class EditorIconSearch
     {
-        public EditorWindowDrawer Window;
+        public EditorWindowBuilder Window;
         public Action Repaint;
         public Action Close;
 
@@ -15,7 +15,7 @@ namespace UnityEssentials
         public static void ShowWindow()
         {
             var editor = new EditorIconSearch();
-            editor.Window = EditorWindowDrawer
+            editor.Window = EditorWindowBuilder
                 .CreateInstance("Editor Icons", new(320, 450), new(700, 600))
                 .SetInitialization(editor.Initialization)
                 .SetHeader(editor.Header, EditorWindowStyle.Toolbar)
