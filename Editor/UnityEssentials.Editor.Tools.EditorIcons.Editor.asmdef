@@ -1,7 +1,11 @@
 {
-    "name": "UnityEssentials.EditorIcons",
+    "name": "UnityEssentials.Editor.Tools.EditorIcons.Editor",
     "rootNamespace": "UnityEssentials",
-    "references": [],
+    "references": [
+        "GUID:0383f1d3ce7e06706b4a0a19fe636598",
+        "GUID:f054f0258fed7844e9dada987e3e00a4",
+        "GUID:df82a1744907e4d9683c86643b9a9137"
+    ],
     "includePlatforms": [],
     "excludePlatforms": [],
     "allowUnsafeCode": false,
