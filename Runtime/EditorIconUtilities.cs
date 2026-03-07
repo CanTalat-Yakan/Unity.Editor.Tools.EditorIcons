@@ -26,20 +26,23 @@ namespace UnityEssentials
         {
 #if UNITY_EDITOR
             return GetContent(icon)?.image as Texture2D;
-#endif
+#else
             return null;
+#endif
         }
 
-#if UNITY_EDITOR
         public static GUIContent GetContent(EditorIconNames icon)
         {
+#if UNITY_EDITOR
             string iconString = References[(int)icon];
-
             if (!string.IsNullOrEmpty(iconString))
                 return EditorGUIUtility.IconContent(iconString);
+
             return null;
-        }
+#else
+            return null;
 #endif
+        }
 
         public static string[] References =
         {
